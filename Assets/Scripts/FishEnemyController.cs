@@ -1,0 +1,258 @@
+﻿using UnityEngine;
+using UnityEngine.UI;
+using System.Collections;
+
+public class FishEnemyController : MonoBehaviour
+{
+    private Rigidbody rb;
+    public Vector3 speed;
+    public float attackTimer;
+    //distance before behavior changing
+    public Plane threshold;
+    public float entryDelay;
+
+    private float countdown;
+    public float distance;
+    public float initialD;
+    public bool random = true;
+    public float randW = 0;
+    public float randH = 0;
+    public float startRotX, startRotY;
+    public enum FishType
+    {
+        Dumb,
+        Fast,
+        Slow,
+        Wait
+    }
+    public enum FishAI
+    {
+        Straight,
+        Left,
+        Right,
+        Up,
+        Down
+    }
+    //where the fish going left, right, etc, will turn. So they'll go that far first, then hit a plane at the turning point, and then turn at the player.
+    public float turningPoint;
+    public float aiDistance;
+    public FishAI AI;
+    public FishType type;
+
+    public Vector3 startPoint;
+    public Vector3 endPoint;
+    public float currStun;
+
+    public bool attacked = false;
+    private Transform playerTrackedPos;
+    public Vector3 waitPoint;
+    private Vector3 ogScale;
+
+    // Use this for initialization
+    void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+
+        //give countdown some flavor nvm, don't. strict times are best.
+        countdown = attackTimer;
+        if (initialD == 0)
+            initialD = distance;
+
+
+
+        //for fish going to a target.
+
+        //get world point of a different local point, after fixing scale.
+        startPoint = (transform.position);
+        endPoint = endPoint - transform.localPosition;
+        Vector3 scale = transform.localScale;
+        scale.Set(1 / scale.x, 1 / scale.z, 1 / scale.z);
+        endPoint = Vector3.Scale(endPoint, scale);
+        endPoint = transform.TransformPoint(endPoint);
+
+        //might as well give em a little randomness
+        randW = Random.value * 360;
+        randH = Random.value * 90 - 25;
+
+        
+
+
+        threshold = new Plane();
+
+        //start this enemy up after the entry delay...
+        ogScale = transform.localScale;
+        transform.localScale = new Vector3(0, 0, 0);
+
+        // Show button
+        StartCoroutine(ExecuteAfterTime(entryDelay, "begin"));
+
+        //get a position relative to the player in a sphere.
+        float trueD;
+        if (type == FishType.Wait)
+            trueD = initialD;
+        else
+            trueD = distance;
+
+        GameObject playerObject = GameObject.Find("player");
+        if (random)
+        {
+            //randomly generate
+            Quaternion rotation = Quaternion.Euler(randW, randH, 0);
+            rotation = transform.rotation * rotation;
+            waitPoint = rotation * playerObject.transform.forward * trueD;
+
+        }
+        else
+        {
+            Quaternion rotation = Quaternion.Euler(startRotX, startRotY, 0);
+
+            Debug.Log(gameObject.name + " " + rotation + " " + transform.rotation);
+            rotation = transform.rotation * rotation;
+            waitPoint = rotation * playerObject.transform.forward * trueD;
+
+            Debug.Log(rotation + " " + playerObject.transform.position + " " + playerObject.transform.forward + " " + waitPoint);
+        }
+
+    }
+    IEnumerator ExecuteAfterTime(float time, string e)
+    {
+        yield return new WaitForSeconds(time);
+
+        // Code to execute after the delay
+        switch (e)
+        {
+            case "begin":
+                transform.localScale = ogScale;
+                break;
+        }
+    }
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
+
+
+
+    void FixedUpdate()
+    {
+        //check for getting hit.
+        
+        if (currStun > 0)
+        {
+            currStun -= 10 * Time.deltaTime;
+        }
+        else
+        {
+            float factor;
+            Vector3 final;
+            GameObject playerObject = GameObject.Find("player");
+            switch (type)
+            {
+                default:
+                    // --- waiting, like a dumb ass fish, or a waiting fish.
+                    if (countdown > 10 && (type == FishType.Dumb || type == FishType.Wait))
+                    {
+                        // --- Target position ---
+                        
+
+                        
+                        Vector3 targetPos = waitPoint;
+                        //actual velocity setting
+                        final = targetPos - transform.position;
+
+                        //go to it's waiting position. Factor is the speed it goes to the waiting position, I guess.
+                        factor = 5;
+                        if (final.magnitude < 3)
+                            factor = 0.1f;
+                        else if (final.magnitude < 10)
+                            factor = 0.5f;
+
+
+                        final = final.normalized * factor;
+                        rb.AddForce(final, ForceMode.VelocityChange);
+
+                        //LOOK AT ME if not going fast!
+                        if (rb.velocity.magnitude < 5)
+                        {
+                            Quaternion q = Quaternion.LookRotation(playerObject.transform.position - transform.position);
+                            rb.MoveRotation(Quaternion.RotateTowards(transform.rotation, q, 360 * Time.deltaTime));
+                        }
+                        else
+                        {
+                            Quaternion q = Quaternion.LookRotation(final);
+                            rb.MoveRotation(Quaternion.RotateTowards(transform.rotation, q, 360 * Time.deltaTime));
+                        }
+
+                        //count down to attack. Don't do if waiting.
+                        if (type != FishType.Wait)
+                            countdown = countdown - 1;
+                    }
+                    else
+                    {
+                        //attack, when countdown is done, or you're not a dumb fish.
+
+
+                        if(countdown > 0)
+                        {
+                            //when the countdown is between 10 and 0, the fish is tracking the player's position.
+                            playerTrackedPos = playerObject.transform;
+
+                        }
+
+                        final = (playerTrackedPos.position - transform.position);
+
+                        //if the fish hits or get close enough to it's target, it's done. Find a position forward that is the distance away, then set your countdown to halfish.
+                        if (final.magnitude < 3)
+                        {
+                            random = false;
+                        }
+
+                        //check if fish has passed the threshold to attack head on, if it has AI.
+                        threshold.SetNormalAndPosition(playerObject.transform.forward.normalized, playerObject.transform.position + playerObject.transform.forward.normalized * turningPoint);
+                        
+
+                        //if you are any direction, go half way to the player in the direction said. otherwise, go straight.
+                        if (final.magnitude < ((distance - 10) * 1 / 2) || AI == FishAI.Straight)
+                        {
+                            Quaternion q = Quaternion.LookRotation(playerObject.transform.position - transform.position);
+                            rb.MoveRotation(Quaternion.RotateTowards(transform.rotation, q, 100 * Time.deltaTime));
+                            Vector3 attackdir = (playerTrackedPos.position + playerTrackedPos.forward * 2 - transform.position);
+                            rb.velocity += (((attackdir * 2) - rb.velocity) * (0.5f));
+                            
+                        }
+                        else
+                        {
+                            Vector3 attackdir = new Vector3();
+                            switch (AI)
+                            {
+                                case FishAI.Up:
+                                    attackdir = (playerTrackedPos.position + playerTrackedPos.forward * 3 + (playerTrackedPos.up * aiDistance) - transform.position);
+                                    rb.velocity += (((attackdir * 2) - rb.velocity) * (0.5f));
+                                    break;
+                                case FishAI.Down:
+                                    attackdir = (playerTrackedPos.position + playerTrackedPos.forward * 3 - (playerTrackedPos.up * aiDistance) - transform.position);
+                                    rb.velocity += (((attackdir * 2) - rb.velocity) * (0.5f));
+                                    break;
+                                case FishAI.Right:
+                                    attackdir = (playerTrackedPos.position + playerTrackedPos.forward * 3 + (playerTrackedPos.right * aiDistance) - transform.position);
+                                    rb.velocity += (((attackdir * 10) - rb.velocity) * (0.5f));
+                                    break;
+                                case FishAI.Left:
+                                    attackdir = (playerTrackedPos.position + playerTrackedPos.forward * 3 - (playerTrackedPos.right * aiDistance) - transform.position);
+                                    rb.velocity += (((attackdir * 10) - rb.velocity) * (0.5f));
+                                    break;
+                            }
+                        }
+                    }
+
+                    //add drag?
+                    rb.velocity *= Mathf.Clamp01(1f - 5 * Time.fixedDeltaTime);
+                    break;
+            }
+
+           
+        }
+    }
+
+}
