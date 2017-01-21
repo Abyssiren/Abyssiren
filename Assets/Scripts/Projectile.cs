@@ -32,7 +32,7 @@ public class Projectile : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		//fire, or buffered fireing
-		if (Input.GetButtonDown("Fire1") || currBuff > 0 )
+		if (Input.GetButtonDown("Fire1") || currBuff > 0 || MicTestFinishedBuild_Input.volumeVal > 0.2)
 		{
 			Debug.Log("Firing!");
 			firing = true;
