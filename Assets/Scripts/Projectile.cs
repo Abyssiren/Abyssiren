@@ -11,7 +11,7 @@ public class Projectile : MonoBehaviour {
 	private int currFire;
 	public float bulletSpeed = 100;
 
-	public static shootVolumeTreshold = 0.2f;
+	public static float shootVolumeTreshold = 0.2f;
 	//buffer so you can buffer shots
 	private int bufferFrames = 1;
 	private int currBuff;
