@@ -30,7 +30,8 @@ public class MicTestFinishedBuild_Input : MonoBehaviour {
 	{
 		_ac = GetComponent<AudioSource> ();
 		_ac.clip = Microphone.Start (null, true, MicSampleTime_s, MicSampleFrequency_perS);
-		_ac.Play ();
+		//_ac.Play ();
+		_ac.Stop ();
 		beginningBuffer = true;
 		Debug.Log ("MIC INIT FINISHED");
 	}
