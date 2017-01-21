@@ -11,6 +11,7 @@ public class Projectile : MonoBehaviour {
 	private int currFire;
 	public float bulletSpeed = 100;
 
+	public static shootVolumeTreshold = 0.2f;
 	//buffer so you can buffer shots
 	private int bufferFrames = 1;
 	private int currBuff;
@@ -32,7 +33,7 @@ public class Projectile : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		//fire, or buffered fireing
-		if (Input.GetButtonDown("Fire1") || currBuff > 0 || MicTestFinishedBuild_Input.volumeVal > 0.2)
+		if (Input.GetButtonDown("Fire1") || currBuff > 0 || MicTestFinishedBuild_Input.volumeVal > shootVolumeTreshold)
 		{
 			Debug.Log("Firing!");
 			firing = true;
