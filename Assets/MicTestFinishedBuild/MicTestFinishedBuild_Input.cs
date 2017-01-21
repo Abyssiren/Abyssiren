@@ -11,7 +11,8 @@ public class MicTestFinishedBuild_Input : MonoBehaviour {
 	private bool _isInitialized;
 
 	//sampling, audio clip var
-	private static AudioClip _clipRecord;
+	public static AudioSource _ac;
+	//private static AudioClip _clipRecord;
 	private static int _VolumeSampleWindow = 1000; //1 centi-secnond of sample window
 	private bool beginningBuffer;
 
@@ -27,7 +28,9 @@ public class MicTestFinishedBuild_Input : MonoBehaviour {
 
 	void InitMic()
 	{
-		_clipRecord = Microphone.Start (null, true, MicSampleTime_s, MicSampleFrequency_perS);
+		_ac = GetComponent<AudioSource> ();
+		_ac.clip = Microphone.Start (null, true, MicSampleTime_s, MicSampleFrequency_perS);
+		_ac.Play ();
 		beginningBuffer = true;
 		Debug.Log ("MIC INIT FINISHED");
 	}
@@ -55,7 +58,7 @@ public class MicTestFinishedBuild_Input : MonoBehaviour {
 			}
 		}
 
-		_clipRecord.GetData (sampleWinodw, (int)(Microphone.GetPosition(null) - _VolumeSampleWindow -1));
+		_ac.clip.GetData (sampleWinodw, (int)(Microphone.GetPosition(null) - _VolumeSampleWindow -1));
 		float rawVolume = 0;
 		for (int i = 0; i < _VolumeSampleWindow; i++) {
 			rawVolume = rawVolume + Mathf.Abs( sampleWinodw [i]);
