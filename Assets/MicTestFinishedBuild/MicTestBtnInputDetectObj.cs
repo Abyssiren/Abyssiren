@@ -6,10 +6,9 @@ public class MicTestBtnInputDetectObj : MonoBehaviour {
 	public bool upButtonPressedDown = false;
 	public bool downButtonPressedDown = false;
 
-	private Valve.VR.EVRButtonId upButton = Valve.VR.EVRButtonId.k_EButton_DPad_Up;
-	private Valve.VR.EVRButtonId downButton = Valve.VR.EVRButtonId.k_EButton_DPad_Down;
 
 	public Slider sensitivitySlider;
+	SteamVR_Controller.Device device;
 	private SteamVR_Controller.Device controller {
 
 		get { return SteamVR_Controller.Input((int)trackedObj.index);
@@ -23,7 +22,7 @@ public class MicTestBtnInputDetectObj : MonoBehaviour {
 	void Start() {
 
 		trackedObj = GetComponent<SteamVR_TrackedObject>();
-
+		device = SteamVR_Controller.Input ((int)trackedObj.index);
 	}
 
 	void Update() {
@@ -36,9 +35,8 @@ public class MicTestBtnInputDetectObj : MonoBehaviour {
 
 		}
 
-		upButtonPressedDown = (controller.GetPress(upButton) || Input.GetKey(KeyCode.UpArrow));
-		downButtonPressedDown = (controller.GetPress(downButton)|| Input.GetKey(KeyCode.DownArrow));
-
+		upButtonPressedDown = (( device.GetPress (SteamVR_Controller.ButtonMask.Touchpad) && device.GetAxis (Valve.VR.EVRButtonId.k_EButton_SteamVR_Touchpad).y > 0.5f ) || Input.GetKey(KeyCode.UpArrow));
+		downButtonPressedDown = (( device.GetPress (SteamVR_Controller.ButtonMask.Touchpad) && device.GetAxis (Valve.VR.EVRButtonId.k_EButton_SteamVR_Touchpad).y < 0.5f ) || Input.GetKey(KeyCode.DownArrow));
 
 		if (upButtonPressedDown) {
 			Debug.Log("UP");
