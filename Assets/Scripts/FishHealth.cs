@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class FishHealth : MonoBehaviour {
-
+	public bool isTitleFish = false;
     private ColorEnum _color;
     public ColorEnum healthColor
     {
@@ -68,6 +69,9 @@ public class FishHealth : MonoBehaviour {
     }
     public void Broken()
     {
+		if (isTitleFish) {
+			SceneManager.LoadScene (1);
+		}
         //you dead. If this is the first time this is called, when the countdown hasn't started, do it.
         if (deathCountdown == 200)
         {

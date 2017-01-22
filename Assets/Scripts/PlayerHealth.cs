@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class PlayerHealth : MonoBehaviour {
 
@@ -43,6 +44,10 @@ public class PlayerHealth : MonoBehaviour {
 			dmgindicator.color = new Color (dmgindicator.color.r, dmgindicator.color.g, dmgindicator.color.b, 0.6f);
             state = HealthState.Hurt;
             timer = 0;
+
+			if (currHealth <= 0f) {
+				SceneManager.LoadScene (0);
+			}
 
         }
     }
