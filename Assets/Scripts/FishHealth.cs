@@ -6,7 +6,7 @@ public class FishHealth : MonoBehaviour {
 
     public float health = 100;
     private float currHealth;
-    private int deathCountdown = 100;
+    private int deathCountdown = 200;
     public Transform controller;
     //death dissolve 
     private Material mat;
@@ -53,12 +53,10 @@ public class FishHealth : MonoBehaviour {
     public void Broken()
     {
         //you dead. If this is the first time this is called, when the countdown hasn't started, do it.
-        if (deathCountdown == 100)
+        if (deathCountdown == 200)
         {
             currHealth = 0;
             //disable AI
-            if (deathCountdown == 100)
-            {
                 controller.GetComponent<FishEnemyController>().enabled = false;
                 foreach (Transform part in fishParts)
                 {
@@ -67,7 +65,6 @@ public class FishHealth : MonoBehaviour {
                     part.GetComponent<Rigidbody>().drag = 0.05f;
                     part.GetComponent<Rigidbody>().angularDrag = 1;
                 }
-            }
         }
     }
     //children call this to have the fish take damage
@@ -88,6 +85,16 @@ public class FishHealth : MonoBehaviour {
         }
     }
 
+    public void TakeStun(Collision collision)
+    {
+        Debug.Log("stonecoldstunner");
+
+        currStun += stun;
+        controller.GetComponent<FishEnemyController>().currStun = currStun;
+
+
+    }
+
     // Update is called once per frame
     void FixedUpdate () {
 	    if(currHealth <= 0)
@@ -101,7 +108,7 @@ public class FishHealth : MonoBehaviour {
                 deathCountdown = deathCountdown - 1;
 
                 //disolve game objects
-                float intensity = 1f - (deathCountdown * (1f / 100f));
+                float intensity = 1f - (deathCountdown * (1f / 200f));
                 
                 foreach (Transform part in fishParts)
                 {
