@@ -49,6 +49,7 @@ public class Projectile : MonoBehaviour {
 				Vector3 origin = transform.position + transform.forward * 2;
 				Quaternion rot = transform.rotation;
 				Vector3 rotator = rot.eulerAngles;
+                origin.y -= 1; // Start projectile slightly lower
 				//rotator.z += 90;
 				//rot = Quaternion.Euler(rotator);
 				//debug.text = rot.eulerAngles.ToString() + "\n " + Camera.main.transform.rotation.eulerAngles.ToString();
@@ -64,6 +65,9 @@ public class Projectile : MonoBehaviour {
 				//reset shit
 				instantiatedProjectile.velocity = Vector3.zero;
 				instantiatedProjectile.angularVelocity = Vector3.zero;
+
+                Bullet mybullet = instantiatedProjectile.GetComponent<Bullet>();
+                mybullet.Reset();
 
 				//set shit
 				instantiatedProjectile.transform.position = origin;
