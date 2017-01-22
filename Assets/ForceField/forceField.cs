@@ -29,13 +29,11 @@ public class forceField : MonoBehaviour {
 
 
 	public void turnOnForceField(Vector3 newDirection){
-		if (!gameObject.activeSelf) {
-			transform.position = locationPoint.transform.position;
-			//transform.position = locationPoint.transform.position;
-			transform.rotation = Quaternion.LookRotation (newDirection);
-			//		transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, transform.eulerAngles.z + 90f);
-			gameObject.SetActive (true);
-			timeLeft = 20f;
-		}
+		transform.position = locationPoint.transform.position;
+		//transform.position = locationPoint.transform.position;
+		transform.rotation = Quaternion.LookRotation (newDirection);
+		//		transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, transform.eulerAngles.z + 90f);
+		gameObject.SetActive (true);
+		timeLeft = 1.5f;
 	}
 }

@@ -5,10 +5,18 @@ using UnityEngine;
 public class FistForceApply : MonoBehaviour {
 	public static float forceAmount = 10000000f;
 	public forceField forceField;
-	void Update(){
-		if(GetComponent<Rigidbody>().velocity.magnitude > 1f){
-			forceField.turnOnForceField(GetComponent<Rigidbody>().velocity.normalized);
+	public GameObject movingParentObj;
+	public Vector3 oldPosition;
+
+	void Start(){
+		oldPosition = (movingParentObj.transform.position);
+	}
+	void FixedUpdate(){
+		//Debug.Log ("VELO - "+GetComponent<Rigidbody>().velocity.magnitude);
+		if((movingParentObj.transform.position - oldPosition).magnitude/Time.fixedDeltaTime >1f){
+			forceField.turnOnForceField((movingParentObj.transform.position - oldPosition).normalized);
 		}
+		oldPosition = (movingParentObj.transform.position);
 	}
 	void OnCollisionEnter(Collision col)
 	{
