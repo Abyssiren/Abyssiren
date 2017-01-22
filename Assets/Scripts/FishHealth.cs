@@ -7,9 +7,7 @@ public class FishHealth : MonoBehaviour {
     public float health = 100;
     private float currHealth;
     private int deathCountdown = 100;
-    private Transform cube1;
-    private Transform cube2;
-    private Transform cube3;
+    public Transform controller;
     //death dissolve 
     private Material mat;
 
@@ -25,7 +23,7 @@ public class FishHealth : MonoBehaviour {
         //mat = gameObject.GetComponent<Renderer>().material;
 
     }
-
+    //this is now pointless
     void OnCollisionEnter(Collision collision)
     {
         Debug.Log("help me" + gameObject.name);
@@ -48,22 +46,48 @@ public class FishHealth : MonoBehaviour {
             if (currHealth <= 0)
             {
                 //disable AI
-                if (deathCountdown == 100)
+                Broken();
+            }
+        }
+    }
+    public void Broken()
+    {
+        //you dead. If this is the first time this is called, when the countdown hasn't started, do it.
+        if (deathCountdown == 100)
+        {
+            currHealth = 0;
+            //disable AI
+            if (deathCountdown == 100)
+            {
+                controller.GetComponent<FishEnemyController>().enabled = false;
+                foreach (Transform part in fishParts)
                 {
-                    gameObject.GetComponent<FishEnemyController>().enabled = false;
-                    gameObject.GetComponent<CharacterJoint>().breakForce = 0.1f;
-                    gameObject.GetComponent<Rigidbody>().drag = 0.05f;
-                    foreach (Transform part in fishParts)
-                    {
-                        if(part.GetComponent<CharacterJoint>())
-                            part.GetComponent<CharacterJoint>().breakForce = 0.1f;
-                        part.GetComponent<Rigidbody>().drag = 0.05f;
-                        part.GetComponent<Rigidbody>().angularDrag = 1;
-                    }
+                    if (part.GetComponent<CharacterJoint>())
+                        part.GetComponent<CharacterJoint>().breakForce = 0.1f;
+                    part.GetComponent<Rigidbody>().drag = 0.05f;
+                    part.GetComponent<Rigidbody>().angularDrag = 1;
                 }
             }
         }
     }
+    //children call this to have the fish take damage
+    public void TakeDamage(Collision collision)
+    {
+        Debug.Log("talkshitgethit");
+
+        GameObject bullet = collision.gameObject;
+        currHealth -= bullet.GetComponent<Bullet>().power;
+        currStun += stun;
+        controller.GetComponent<FishEnemyController>().currStun = currStun;
+
+
+        if (currHealth <= 0)
+        {
+            //disable AI, die
+            Broken();
+        }
+    }
+
     // Update is called once per frame
     void FixedUpdate () {
 	    if(currHealth <= 0)
@@ -78,9 +102,7 @@ public class FishHealth : MonoBehaviour {
 
                 //disolve game objects
                 float intensity = 1f - (deathCountdown * (1f / 100f));
-                //Debug.Log(deathCountdown + " " + intensity);
                 
-                transform.FindChild("mesh").GetComponent<Renderer>().material.SetFloat("_DissolveIntensity", intensity);
                 foreach (Transform part in fishParts)
                 {
                     part.FindChild("mesh").GetComponent<Renderer>().material.SetFloat("_DissolveIntensity", intensity - Random.Range(.001f,.05f));
