@@ -218,7 +218,7 @@ public class FishEnemyController : MonoBehaviour
                             AudioSource audio = this.gameObject.AddComponent<AudioSource>();
                             audio.PlayOneShot(this.warningSound);
                             attackSounding = true;
-                            DrawLine(transform.position, playerObject.transform.position + (playerObject.transform.position - transform.position).normalized * 5, 5f);
+                            DrawLine(transform.position, playerObject.transform.position - playerObject.transform.up + (playerObject.transform.position - transform.position).normalized * 3, .2f);
                         }
                         if(countdown > 0)
                         {
@@ -234,7 +234,7 @@ public class FishEnemyController : MonoBehaviour
                         final = (playerTrackedPos - transform.position);
 
                         //if the fish hits or get close enough to it's target, it's done. Find a position forward that is the distance away, then set your countdown to halfish.
-                        if (final.magnitude < 3)
+                        if (final.magnitude <= 1)
                         {
                             random = false;
                             waitPoint = transform.forward * distance;
@@ -251,7 +251,7 @@ public class FishEnemyController : MonoBehaviour
                         {
                             Quaternion q = Quaternion.LookRotation(playerTrackedPos - transform.position);
                             rb.MoveRotation(Quaternion.RotateTowards(transform.rotation, q, 100 * Time.deltaTime));
-                            Vector3 attackdir = (playerTrackedPos + playerTrackedFor * 2 - transform.position).normalized;
+                            Vector3 attackdir = (playerTrackedPos - transform.position).normalized;
                             rb.velocity += (((attackdir * attackingSpeed) - rb.velocity) * (0.5f));
                         }
                         else
@@ -260,19 +260,19 @@ public class FishEnemyController : MonoBehaviour
                             switch (AI)
                             {
                                 case FishAI.Up:
-                                    attackdir = (playerTrackedPos + playerTrackedFor * 3 + (playerTrackedUp * aiDistance) - transform.position);
+                                    attackdir = (playerTrackedPos + (playerTrackedUp * aiDistance) - transform.position);
                                     rb.velocity += (((attackdir * attackingSpeed) - rb.velocity) * (0.5f));
                                     break;
                                 case FishAI.Down:
-                                    attackdir = (playerTrackedPos + playerTrackedFor * 3 - (playerTrackedUp * aiDistance) - transform.position);
+                                    attackdir = (playerTrackedPos - (playerTrackedUp * aiDistance) - transform.position);
                                     rb.velocity += (((attackdir * attackingSpeed) - rb.velocity) * (0.5f));
                                     break;
                                 case FishAI.Right:
-                                    attackdir = (playerTrackedPos + playerTrackedFor * 3 + (playerTrackedRight * aiDistance) - transform.position);
+                                    attackdir = (playerTrackedPos + (playerTrackedRight * aiDistance) - transform.position);
                                     rb.velocity += (((attackdir * attackingSpeed) - rb.velocity) * (0.5f));
                                     break;
                                 case FishAI.Left:
-                                    attackdir = (playerTrackedPos + playerTrackedFor * 3 - (playerTrackedRight * aiDistance) - transform.position);
+                                    attackdir = (playerTrackedPos - (playerTrackedRight * aiDistance) - transform.position);
                                     rb.velocity += (((attackdir * attackingSpeed) - rb.velocity) * (0.5f));
                                     break;
                             }
