@@ -132,6 +132,12 @@ public class FishHealth : MonoBehaviour {
         currHealth -= 25;
 
 
+        if (currHealth <= 0)
+        {
+            //disable AI, die
+            Broken();
+        }
+
         float hitSpeed = collision.relativeVelocity.magnitude;
 
         Debug.Log("stonecoldstunner " + hitSpeed);
