@@ -51,8 +51,8 @@ public class GameController : MonoBehaviour {
                         Debug.Log("yeah found the child");
                         FishEnemyController cont = instantiatedEnemy.transform.FindChild("fishhead").GetComponent<FishEnemyController>();
                         cont.distance = distance;
-                        cont.attackTimer = Random.value * 400 + 100;
-                        cont.entryDelay = Random.Range(0, 10);
+                        cont.attackTimer = Random.value * 400 + 200;
+                        cont.entryDelay = Random.Range(0, 8);
                         cont.random = true;
                     }
                     CurrEnemies.Add(instantiatedEnemy);

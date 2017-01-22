@@ -77,7 +77,7 @@ public class FishEnemyController : MonoBehaviour
 
         //might as well give em a little randomness
         randW = Random.value * 360;
-        randH = Random.value * 90 - 25;
+        randH = Random.value * 40 - 25;
 
         
 
