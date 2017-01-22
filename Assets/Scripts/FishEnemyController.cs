@@ -4,6 +4,7 @@ using System.Collections;
 
 public class FishEnemyController : MonoBehaviour
 {
+    public AudioClip warningSound;
     private Rigidbody rb;
     public Vector3 speed;
     public float attackTimer;
@@ -199,6 +200,8 @@ public class FishEnemyController : MonoBehaviour
                         //attack, when countdown is done, or you're not a dumb fish.
                         if(!attackSounding)
                         {
+                            AudioSource audio = this.gameObject.AddComponent<AudioSource>();
+                            audio.PlayOneShot(this.warningSound);
                             attackSounding = true;
                         }
                         if(countdown > 0)
