@@ -1,13 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerHealth : MonoBehaviour {
 
     public float maxHealth = 1000;
     public float currHealth;
     public float damageChunk = 50;
-
+	public Image dmgindicator;
     //recover if you don't take damage. Hurt and invincible when you do. Transition to stop from hurt, then to recover after a bit.
     public enum HealthState
     {
@@ -21,7 +22,7 @@ public class PlayerHealth : MonoBehaviour {
     public float hurtInvinTime = 2;
     //how long from stop to recover
     public float recoverTime = 5;
-    public float recoverRate = 5;
+    public float recoverRate = 1;
 
     public float timer = 0;
     // Use this for initialization
@@ -39,8 +40,10 @@ public class PlayerHealth : MonoBehaviour {
             GameObject fish = collider.gameObject;
             //take the d
             currHealth = currHealth - damageChunk;
+			dmgindicator.color = new Color (dmgindicator.color.r, dmgindicator.color.g, dmgindicator.color.b, 0.6f);
             state = HealthState.Hurt;
             timer = 0;
+
         }
     }
 
