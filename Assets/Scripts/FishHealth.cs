@@ -103,12 +103,21 @@ public class FishHealth : MonoBehaviour {
         }
     }
 
-    public void TakeStun(Collision collision)
+    public void TakeSlap(Collision collision)
     {
-        Debug.Log("stonecoldstunner");
 
         currStun += stun;
-        controller.GetComponent<FishEnemyController>().currStun = currStun;
+        FishEnemyController cont = controller.GetComponent<FishEnemyController>();
+        cont.currStun = currStun;
+
+        //slapped so hard it wants to go home
+        cont.countdown = cont.attackTimer;
+        currHealth -= 25;
+
+
+        float hitSpeed = collision.relativeVelocity.magnitude;
+
+        Debug.Log("stonecoldstunner " + hitSpeed);
 
 
     }

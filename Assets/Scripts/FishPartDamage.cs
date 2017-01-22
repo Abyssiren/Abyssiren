@@ -8,15 +8,13 @@ public class FishPartDamage : MonoBehaviour {
     {
         if (collision.gameObject.tag == "Projectile")
         {
-            Debug.Log("help me" + gameObject.name);
             //could probably get the color and damage scale in here, too
             transform.parent.GetComponent<FishHealth>().TakeDamage(collision);
         }
         if (collision.gameObject.tag == "Hand")
         {
-            Debug.Log("help me" + gameObject.name);
             //could probably get the color and damage scale in here, too
-            transform.parent.GetComponent<FishHealth>().TakeStun(collision);
+            transform.parent.GetComponent<FishHealth>().TakeSlap(collision);
         }
     }
 

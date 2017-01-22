@@ -17,7 +17,7 @@ public class Projectile : MonoBehaviour {
 	private int currBuff;
 
 	private bool firing = false;
-	public Text debug;
+    public float originy = 0.3f;
 	// Use this for initialization
 	void Start () {
 		currFire = 0;
@@ -35,7 +35,6 @@ public class Projectile : MonoBehaviour {
 		//fire, or buffered fireing
 		if (Input.GetButtonDown("Fire1") || currBuff > 0 || MicTestFinishedBuild_Input.volumeVal > shootVolumeTreshold)
 		{
-			Debug.Log("Firing!");
 			firing = true;
 			currBuff = currBuff - 1;
 
@@ -49,7 +48,7 @@ public class Projectile : MonoBehaviour {
 				Vector3 origin = transform.position + transform.forward * 2;
 				Quaternion rot = transform.rotation;
 				Vector3 rotator = rot.eulerAngles;
-                origin.y -= 1; // Start projectile slightly lower
+                origin.y -= originy; // Start projectile slightly lower
 				//rotator.z += 90;
 				//rot = Quaternion.Euler(rotator);
 				//debug.text = rot.eulerAngles.ToString() + "\n " + Camera.main.transform.rotation.eulerAngles.ToString();

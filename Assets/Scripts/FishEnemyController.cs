@@ -12,7 +12,7 @@ public class FishEnemyController : MonoBehaviour
     public Plane threshold;
     public float entryDelay;
 
-    private float countdown;
+    public float countdown;
     public float distance;
     public float initialD;
     public bool random = true;
@@ -139,6 +139,21 @@ public class FishEnemyController : MonoBehaviour
 
     }
 
+    void DrawLine(Vector3 start, Vector3 end, float duration = 0.2f)
+    {
+        GameObject myLine = new GameObject();
+        myLine.transform.position = start;
+        myLine.AddComponent<LineRenderer>();
+        LineRenderer lr = myLine.GetComponent<LineRenderer>();
+        lr.material = new Material(Shader.Find("Particles/Alpha Blended Premultiply"));
+        lr.startColor = new Color(1, 0, 0, .5f);
+        lr.endColor = new Color(0.5f, 0.5f, 0.5f, .3f);
+        lr.startWidth =.3f;
+        lr.endWidth = .03f;
+        lr.SetPosition(0, start);
+        lr.SetPosition(1, end);
+        GameObject.Destroy(myLine, duration);
+    }
 
 
     void FixedUpdate()
@@ -203,6 +218,7 @@ public class FishEnemyController : MonoBehaviour
                             AudioSource audio = this.gameObject.AddComponent<AudioSource>();
                             audio.PlayOneShot(this.warningSound);
                             attackSounding = true;
+                            DrawLine(transform.position, playerObject.transform.position + (playerObject.transform.position - transform.position).normalized * 5, 5f);
                         }
                         if(countdown > 0)
                         {
@@ -222,7 +238,7 @@ public class FishEnemyController : MonoBehaviour
                         {
                             random = false;
                             waitPoint = transform.forward * distance;
-                            countdown = attackTimer / 2;
+                            countdown = attackTimer;
                             attackSounding = false;
                         }
 
