@@ -52,6 +52,7 @@ public class FishEnemyController : MonoBehaviour
     private Vector3 ogScale;
     public float movingSpeed = 8;
     public float attackingSpeed = 8;
+    private bool attackSounding = false;
 
     // Use this for initialization
     void Start()
@@ -196,8 +197,10 @@ public class FishEnemyController : MonoBehaviour
                     else
                     {
                         //attack, when countdown is done, or you're not a dumb fish.
-
-
+                        if(!attackSounding)
+                        {
+                            attackSounding = true;
+                        }
                         if(countdown > 0)
                         {
                             //when the countdown is between 20 and 0, the fish is tracking the player's position.
@@ -217,6 +220,7 @@ public class FishEnemyController : MonoBehaviour
                             random = false;
                             waitPoint = transform.forward * distance;
                             countdown = attackTimer / 2;
+                            attackSounding = false;
                         }
 
                         //check if fish has passed the threshold to attack head on, if it has AI.
