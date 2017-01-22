@@ -4,6 +4,15 @@ using System.Collections;
 
 public class FishHealth : MonoBehaviour {
 
+    private ColorEnum _color;
+    public ColorEnum healthColor
+    {
+        get { return _color; }
+        set
+        {
+            _color = value;
+        }
+    }
     public float health = 100;
     private float currHealth;
     private int deathCountdown = 200;
@@ -21,6 +30,11 @@ public class FishHealth : MonoBehaviour {
 	void Start () {
         currHealth = health;
         //mat = gameObject.GetComponent<Renderer>().material;
+        healthColor = ColorUtil.getRandomAvailableColor();
+        foreach (Transform part in fishParts)
+        {
+            part.FindChild("mesh").GetComponent<Renderer>().material.color = ColorUtil.getUIImageColorClassFromColorEnum(healthColor);
+        }
 
     }
     //this is now pointless
@@ -70,9 +84,13 @@ public class FishHealth : MonoBehaviour {
     //children call this to have the fish take damage
     public void TakeDamage(Collision collision)
     {
-        Debug.Log("talkshitgethit");
-
         GameObject bullet = collision.gameObject;
+        ColorEnum bulletColor = bullet.GetComponent<Bullet>().color;
+        if (bulletColor == healthColor)
+        {
+            currHealth -= bullet.GetComponent<Bullet>().power * 2;
+        }
+        //then, tell the bullet to die
         currHealth -= bullet.GetComponent<Bullet>().power;
         currStun += stun;
         controller.GetComponent<FishEnemyController>().currStun = currStun;

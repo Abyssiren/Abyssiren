@@ -54,10 +54,16 @@ public class Bullet : MonoBehaviour
         }
     }
 
+    public void HitboxOff()
+    {
+        gameObject.GetComponent<BoxCollider>().isTrigger = true;
+    } 
+
     public void Reset()
     {
         timeElapsed = 0.0f;
         this.gameObject.SetActive(true);
+        gameObject.GetComponent<BoxCollider>().isTrigger = false;
         this.transform.localScale = originalScale;
     }
 }
