@@ -22,6 +22,8 @@ public class FishHealth : MonoBehaviour {
     private Material mat;
     public AudioClip punchedSound;
     public AudioClip deathSound;
+    public AudioClip voiceHitOffPitchSound;
+    public AudioClip voiceHitOnPitchSound;
 
 
     [SerializeField]
@@ -98,11 +100,23 @@ public class FishHealth : MonoBehaviour {
     //children call this to have the fish take damage
     public void TakeDamage(Collision collision)
     {
+        AudioSource audio = this.gameObject.GetComponent<AudioSource>();
+        if (audio == null)
+        {
+            audio = this.gameObject.AddComponent<AudioSource>();
+        }
+        audio.Stop();
+
         GameObject bullet = collision.gameObject;
         ColorEnum bulletColor = bullet.GetComponent<Bullet>().color;
         if (bulletColor == healthColor)
         {
+            audio.PlayOneShot(this.voiceHitOnPitchSound);
             currHealth -= bullet.GetComponent<Bullet>().power * 3;
+        }
+        else
+        {
+            audio.PlayOneShot(this.voiceHitOnPitchSound);
         }
         //then, tell the bullet to die
         currHealth -= bullet.GetComponent<Bullet>().power;

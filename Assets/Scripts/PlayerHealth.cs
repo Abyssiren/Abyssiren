@@ -17,7 +17,8 @@ public class PlayerHealth : MonoBehaviour {
         Stop,
         Hurt
     }
-
+    public AudioClip hurtSound;
+    public AudioClip deathSound;
     public HealthState state;
     //damage invincibilty time
     public float hurtInvinTime = 2;
@@ -37,6 +38,13 @@ public class PlayerHealth : MonoBehaviour {
         Debug.Log("YOU AND I COLLIDE");
         if (collider.gameObject.tag == "Fish" && state != HealthState.Hurt)
         {
+            AudioSource audio = this.gameObject.GetComponent<AudioSource>();
+            if (audio == null)
+            {
+                audio = this.gameObject.AddComponent<AudioSource>();
+            }
+            audio.Stop();
+            
             //Debug.Log("got hurt" + gameObject.name);
             GameObject fish = collider.gameObject;
             //take the d
@@ -46,8 +54,11 @@ public class PlayerHealth : MonoBehaviour {
             timer = 0;
 
 			if (currHealth <= 0f) {
-				SceneManager.LoadScene (0);
-			}
+                audio.PlayOneShot(this.deathSound);
+                SceneManager.LoadScene (0);
+			} else {
+                audio.PlayOneShot(this.hurtSound);
+            }
 
         }
     }
