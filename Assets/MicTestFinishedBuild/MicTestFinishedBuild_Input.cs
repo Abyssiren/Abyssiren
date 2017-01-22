@@ -65,13 +65,13 @@ public class MicTestFinishedBuild_Input : MonoBehaviour {
 			rawVolume = rawVolume + Mathf.Abs( sampleWinodw [i]);
 		}
 		rawVolume = rawVolume / _VolumeSampleWindow;
-		Debug.Log ("rawVolume - "+rawVolume);
+//		Debug.Log ("rawVolume - "+rawVolume);
 		return rawVolume;
 	}
 
 	public void setVolumeVal(){
 		
-		volumeVal = getRawVolume () * Volume_Sensitivity;
+		volumeVal = Mathf.Min(getRawVolume () * Volume_Sensitivity, 1.0f);
 	}
 
 	void Update()

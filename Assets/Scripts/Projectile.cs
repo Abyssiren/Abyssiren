@@ -68,6 +68,7 @@ public class Projectile : MonoBehaviour {
 
                 Bullet mybullet = instantiatedProjectile.GetComponent<Bullet>();
                 mybullet.Reset();
+                mybullet.color = ColorUtil.getColorFromVolume(MicTestFinishedBuild_Input.volumeVal);
 
 				//set shit
 				instantiatedProjectile.transform.position = origin;
