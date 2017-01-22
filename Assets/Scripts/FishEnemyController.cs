@@ -50,7 +50,8 @@ public class FishEnemyController : MonoBehaviour
     private Vector3 playerTrackedRight;
     public Vector3 waitPoint;
     private Vector3 ogScale;
-    public float attackingSpeed = 20;
+    public float movingSpeed = 8;
+    public float attackingSpeed = 8;
 
     // Use this for initialization
     void Start()
@@ -166,7 +167,7 @@ public class FishEnemyController : MonoBehaviour
                         final = targetPos - transform.position;
 
                         //go to it's waiting position. Factor is the speed it goes to the waiting position, I guess.
-                        factor = 5;
+                        factor = 1;
                         if (final.magnitude < 3)
                             factor = 0.1f;
                         else if (final.magnitude < 10)
@@ -174,8 +175,8 @@ public class FishEnemyController : MonoBehaviour
 
 
                         final = final.normalized * factor;
-                        rb.AddForce(final, ForceMode.VelocityChange);
-
+                        //rb.AddForce(final, ForceMode.VelocityChange);
+                        rb.velocity += (((final * movingSpeed) - rb.velocity) * (0.5f));
                         //LOOK AT ME if not going fast!
                         if (rb.velocity.magnitude < 5)
                         {
