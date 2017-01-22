@@ -50,6 +50,7 @@ public class FishEnemyController : MonoBehaviour
     private Vector3 playerTrackedRight;
     public Vector3 waitPoint;
     private Vector3 ogScale;
+    public float attackingSpeed = 20;
 
     // Use this for initialization
     void Start()
@@ -227,7 +228,7 @@ public class FishEnemyController : MonoBehaviour
                             Quaternion q = Quaternion.LookRotation(playerTrackedPos - transform.position);
                             rb.MoveRotation(Quaternion.RotateTowards(transform.rotation, q, 100 * Time.deltaTime));
                             Vector3 attackdir = (playerTrackedPos + playerTrackedFor * 2 - transform.position).normalized;
-                            rb.velocity += (((attackdir * 35) - rb.velocity) * (0.5f));
+                            rb.velocity += (((attackdir * attackingSpeed) - rb.velocity) * (0.5f));
                         }
                         else
                         {
