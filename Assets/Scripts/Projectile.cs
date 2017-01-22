@@ -45,7 +45,7 @@ public class Projectile : MonoBehaviour {
 				currFire = fireRate;
 
 				//generate angle of shooting
-				Vector3 origin = transform.position + transform.forward * 2;
+				Vector3 origin = transform.position + transform.forward * 0.12f;
 				Quaternion rot = transform.rotation;
 				Vector3 rotator = rot.eulerAngles;
                 origin.y -= originy; // Start projectile slightly lower
@@ -78,9 +78,6 @@ public class Projectile : MonoBehaviour {
 				//shooting code
 				instantiatedProjectile.AddForce(instantiatedProjectile.transform.forward * bulletSpeed);
 				instantiatedProjectile.velocity = transform.forward * bulletSpeed;
-				//debug.text += "\n" + instantiatedProjectile.velocity.ToString();
-				//debug.text += "\n" + Screen.width.ToString() + " " + Screen.height.ToString();
-
 				bullets.Enqueue(instantiatedProjectile);
 			}
 			else

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ColorUtil : MonoBehaviour {
-	public static int MaxColorAllowed = 4;
+	public static int MaxColorAllowed = 3;
 	public static Dictionary<int, ColorEnum> colorDict = new Dictionary<int, ColorEnum>(){
 		{0, ColorEnum.BLUE},
 		{1, ColorEnum.GREEN},
@@ -32,10 +32,12 @@ public class ColorUtil : MonoBehaviour {
 
 
 	public static ColorEnum getColorFromKey(int colorKey){
+        Debug.Log(colorKey + " colorkey");
 		if (colorKey < MaxColorAllowed && colorKey>=0) {
 			return colorDict [colorKey];
 		} else {
-			return ColorEnum.ERROR;
+            Debug.Log(colorKey + " colorkey err");
+            return ColorEnum.ERROR;
 		}
 	}
 	public static int getKeyFromVolume(float volume){
@@ -43,7 +45,10 @@ public class ColorUtil : MonoBehaviour {
 			return -1;
 		} else {
 			float VolumeStepSize = (1f - Projectile.shootVolumeTreshold) / MaxColorAllowed;
-			return (int)((volume - Projectile.shootVolumeTreshold) / VolumeStepSize);
+            int ret = (int)((volume - Projectile.shootVolumeTreshold) / VolumeStepSize);
+            if (ret >= MaxColorAllowed)
+                ret = MaxColorAllowed-1;
+            return ret;
 		}
 	}
 

@@ -173,7 +173,7 @@ public class FishEnemyController : MonoBehaviour
             {
                 default:
                     // --- waiting, like a dumb ass fish, or a waiting fish.
-                    if (countdown > 20 && (type == FishType.Dumb || type == FishType.Wait))
+                    if (countdown > 15 && (type == FishType.Dumb || type == FishType.Wait))
                     {
                         // --- Target position ---
                         
@@ -222,7 +222,7 @@ public class FishEnemyController : MonoBehaviour
                         }
                         if(countdown > 0)
                         {
-                            //when the countdown is between 20 and 0, the fish is tracking the player's position.
+                            //when the countdown is between 15 and 0, the fish is tracking the player's position.
                             playerTrackedPos = playerObject.transform.position;
                             playerTrackedFor = playerObject.transform.forward;
                             playerTrackedUp = playerObject.transform.up;
@@ -260,19 +260,19 @@ public class FishEnemyController : MonoBehaviour
                             switch (AI)
                             {
                                 case FishAI.Up:
-                                    attackdir = (playerTrackedPos + (playerTrackedUp * aiDistance) - transform.position);
+                                    attackdir = (playerTrackedPos + (playerTrackedUp * aiDistance) - transform.position).normalized;
                                     rb.velocity += (((attackdir * attackingSpeed) - rb.velocity) * (0.5f));
                                     break;
                                 case FishAI.Down:
-                                    attackdir = (playerTrackedPos - (playerTrackedUp * aiDistance) - transform.position);
+                                    attackdir = (playerTrackedPos - (playerTrackedUp * aiDistance) - transform.position).normalized;
                                     rb.velocity += (((attackdir * attackingSpeed) - rb.velocity) * (0.5f));
                                     break;
                                 case FishAI.Right:
-                                    attackdir = (playerTrackedPos + (playerTrackedRight * aiDistance) - transform.position);
+                                    attackdir = (playerTrackedPos + (playerTrackedRight * aiDistance) - transform.position).normalized;
                                     rb.velocity += (((attackdir * attackingSpeed) - rb.velocity) * (0.5f));
                                     break;
                                 case FishAI.Left:
-                                    attackdir = (playerTrackedPos - (playerTrackedRight * aiDistance) - transform.position);
+                                    attackdir = (playerTrackedPos - (playerTrackedRight * aiDistance) - transform.position).normalized;
                                     rb.velocity += (((attackdir * attackingSpeed) - rb.velocity) * (0.5f));
                                     break;
                             }

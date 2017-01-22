@@ -48,7 +48,7 @@ public class Bullet : MonoBehaviour
         timeElapsed += Time.deltaTime;
         this.transform.localScale = originalScale * timeElapsed * 1000.0f;
 
-        if (timeElapsed > 0.5f)
+        if (timeElapsed > 1f)
         {
             this.gameObject.SetActive(false);
         }
