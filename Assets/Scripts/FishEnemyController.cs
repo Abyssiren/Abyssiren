@@ -215,7 +215,12 @@ public class FishEnemyController : MonoBehaviour
                         //attack, when countdown is done, or you're not a dumb fish.
                         if(!attackSounding)
                         {
-                            AudioSource audio = this.gameObject.AddComponent<AudioSource>();
+                            AudioSource audio = this.gameObject.GetComponent<AudioSource>();
+                            if (audio == null)
+                            {
+                                audio = this.gameObject.AddComponent<AudioSource>();
+                            }
+                            audio.Stop();
                             audio.PlayOneShot(this.warningSound);
                             attackSounding = true;
                             DrawLine(transform.position, playerObject.transform.position - playerObject.transform.up + (playerObject.transform.position - transform.position).normalized * 3, .2f);

@@ -19,6 +19,8 @@ public class FishHealth : MonoBehaviour {
     public Transform controller;
     //death dissolve 
     private Material mat;
+    public AudioClip punchedSound;
+    public AudioClip deathSound;
 
 
     [SerializeField]
@@ -69,6 +71,14 @@ public class FishHealth : MonoBehaviour {
         //you dead. If this is the first time this is called, when the countdown hasn't started, do it.
         if (deathCountdown == 200)
         {
+            AudioSource audio = this.gameObject.GetComponent<AudioSource>();
+            if (audio == null)
+            {
+                audio = this.gameObject.AddComponent<AudioSource>();
+            }
+            audio.Stop();
+            audio.PlayOneShot(this.deathSound);
+
             currHealth = 0;
             //disable AI
                 controller.GetComponent<FishEnemyController>().enabled = false;
@@ -105,6 +115,13 @@ public class FishHealth : MonoBehaviour {
 
     public void TakeSlap(Collision collision)
     {
+        AudioSource audio = this.gameObject.GetComponent<AudioSource>();
+        if (audio == null)
+        {
+            audio = this.gameObject.AddComponent<AudioSource>();
+        }
+        audio.Stop();
+        audio.PlayOneShot(this.punchedSound);
 
         currStun += stun;
         FishEnemyController cont = controller.GetComponent<FishEnemyController>();
