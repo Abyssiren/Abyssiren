@@ -44,7 +44,10 @@ public class FishEnemyController : MonoBehaviour
     public float currStun;
 
     public bool attacked = false;
-    private Transform playerTrackedPos;
+    private Vector3 playerTrackedPos;
+    private Vector3 playerTrackedFor;
+    private Vector3 playerTrackedUp;
+    private Vector3 playerTrackedRight;
     public Vector3 waitPoint;
     private Vector3 ogScale;
 
@@ -151,7 +154,7 @@ public class FishEnemyController : MonoBehaviour
             {
                 default:
                     // --- waiting, like a dumb ass fish, or a waiting fish.
-                    if (countdown > 10 && (type == FishType.Dumb || type == FishType.Wait))
+                    if (countdown > 20 && (type == FishType.Dumb || type == FishType.Wait))
                     {
                         // --- Target position ---
                         
@@ -195,17 +198,23 @@ public class FishEnemyController : MonoBehaviour
 
                         if(countdown > 0)
                         {
-                            //when the countdown is between 10 and 0, the fish is tracking the player's position.
-                            playerTrackedPos = playerObject.transform;
-
+                            //when the countdown is between 20 and 0, the fish is tracking the player's position.
+                            playerTrackedPos = playerObject.transform.position;
+                            playerTrackedFor = playerObject.transform.forward;
+                            playerTrackedUp = playerObject.transform.up;
+                            playerTrackedRight = playerObject.transform.right;
+                            countdown = countdown - 1;
+                            Debug.Log(countdown);
                         }
 
-                        final = (playerTrackedPos.position - transform.position);
+                        final = (playerTrackedPos - transform.position);
 
                         //if the fish hits or get close enough to it's target, it's done. Find a position forward that is the distance away, then set your countdown to halfish.
                         if (final.magnitude < 3)
                         {
                             random = false;
+                            waitPoint = transform.forward * distance;
+                            countdown = attackTimer / 2;
                         }
 
                         //check if fish has passed the threshold to attack head on, if it has AI.
@@ -215,11 +224,10 @@ public class FishEnemyController : MonoBehaviour
                         //if you are any direction, go half way to the player in the direction said. otherwise, go straight.
                         if (final.magnitude < ((distance - 10) * 1 / 2) || AI == FishAI.Straight)
                         {
-                            Quaternion q = Quaternion.LookRotation(playerObject.transform.position - transform.position);
+                            Quaternion q = Quaternion.LookRotation(playerTrackedPos - transform.position);
                             rb.MoveRotation(Quaternion.RotateTowards(transform.rotation, q, 100 * Time.deltaTime));
-                            Vector3 attackdir = (playerTrackedPos.position + playerTrackedPos.forward * 2 - transform.position);
-                            rb.velocity += (((attackdir * 2) - rb.velocity) * (0.5f));
-                            
+                            Vector3 attackdir = (playerTrackedPos + playerTrackedFor * 2 - transform.position).normalized;
+                            rb.velocity += (((attackdir * 35) - rb.velocity) * (0.5f));
                         }
                         else
                         {
@@ -227,25 +235,24 @@ public class FishEnemyController : MonoBehaviour
                             switch (AI)
                             {
                                 case FishAI.Up:
-                                    attackdir = (playerTrackedPos.position + playerTrackedPos.forward * 3 + (playerTrackedPos.up * aiDistance) - transform.position);
+                                    attackdir = (playerTrackedPos + playerTrackedFor * 3 + (playerTrackedUp * aiDistance) - transform.position);
                                     rb.velocity += (((attackdir * 2) - rb.velocity) * (0.5f));
                                     break;
                                 case FishAI.Down:
-                                    attackdir = (playerTrackedPos.position + playerTrackedPos.forward * 3 - (playerTrackedPos.up * aiDistance) - transform.position);
+                                    attackdir = (playerTrackedPos + playerTrackedFor * 3 - (playerTrackedUp * aiDistance) - transform.position);
                                     rb.velocity += (((attackdir * 2) - rb.velocity) * (0.5f));
                                     break;
                                 case FishAI.Right:
-                                    attackdir = (playerTrackedPos.position + playerTrackedPos.forward * 3 + (playerTrackedPos.right * aiDistance) - transform.position);
+                                    attackdir = (playerTrackedPos + playerTrackedFor * 3 + (playerTrackedRight * aiDistance) - transform.position);
                                     rb.velocity += (((attackdir * 10) - rb.velocity) * (0.5f));
                                     break;
                                 case FishAI.Left:
-                                    attackdir = (playerTrackedPos.position + playerTrackedPos.forward * 3 - (playerTrackedPos.right * aiDistance) - transform.position);
+                                    attackdir = (playerTrackedPos + playerTrackedFor * 3 - (playerTrackedRight * aiDistance) - transform.position);
                                     rb.velocity += (((attackdir * 10) - rb.velocity) * (0.5f));
                                     break;
                             }
                         }
                     }
-
                     //add drag?
                     rb.velocity *= Mathf.Clamp01(1f - 5 * Time.fixedDeltaTime);
                     break;
