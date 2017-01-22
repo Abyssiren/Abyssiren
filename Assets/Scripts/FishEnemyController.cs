@@ -223,7 +223,7 @@ public class FishEnemyController : MonoBehaviour
                             audio.Stop();
                             audio.PlayOneShot(this.warningSound);
                             attackSounding = true;
-                            DrawLine(transform.position, playerObject.transform.position - playerObject.transform.up/2 + (playerObject.transform.position - transform.position).normalized * 4, .4f);
+                            DrawLine(transform.position, playerObject.transform.position - playerObject.transform.up/2 + (playerObject.transform.position - transform.position).normalized * 4, 0.4f);
                         }
                         if(countdown > 0)
                         {
