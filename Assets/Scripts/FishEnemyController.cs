@@ -224,7 +224,7 @@ public class FishEnemyController : MonoBehaviour
                         
 
                         //if you are any direction, go half way to the player in the direction said. otherwise, go straight.
-                        if (final.magnitude < ((distance - 10) * 1 / 2) || AI == FishAI.Straight)
+                        if (final.magnitude < ((distance) * 1 / 2) || AI == FishAI.Straight)
                         {
                             Quaternion q = Quaternion.LookRotation(playerTrackedPos - transform.position);
                             rb.MoveRotation(Quaternion.RotateTowards(transform.rotation, q, 100 * Time.deltaTime));
@@ -238,19 +238,19 @@ public class FishEnemyController : MonoBehaviour
                             {
                                 case FishAI.Up:
                                     attackdir = (playerTrackedPos + playerTrackedFor * 3 + (playerTrackedUp * aiDistance) - transform.position);
-                                    rb.velocity += (((attackdir * 2) - rb.velocity) * (0.5f));
+                                    rb.velocity += (((attackdir * attackingSpeed) - rb.velocity) * (0.5f));
                                     break;
                                 case FishAI.Down:
                                     attackdir = (playerTrackedPos + playerTrackedFor * 3 - (playerTrackedUp * aiDistance) - transform.position);
-                                    rb.velocity += (((attackdir * 2) - rb.velocity) * (0.5f));
+                                    rb.velocity += (((attackdir * attackingSpeed) - rb.velocity) * (0.5f));
                                     break;
                                 case FishAI.Right:
                                     attackdir = (playerTrackedPos + playerTrackedFor * 3 + (playerTrackedRight * aiDistance) - transform.position);
-                                    rb.velocity += (((attackdir * 10) - rb.velocity) * (0.5f));
+                                    rb.velocity += (((attackdir * attackingSpeed) - rb.velocity) * (0.5f));
                                     break;
                                 case FishAI.Left:
                                     attackdir = (playerTrackedPos + playerTrackedFor * 3 - (playerTrackedRight * aiDistance) - transform.position);
-                                    rb.velocity += (((attackdir * 10) - rb.velocity) * (0.5f));
+                                    rb.velocity += (((attackdir * attackingSpeed) - rb.velocity) * (0.5f));
                                     break;
                             }
                         }

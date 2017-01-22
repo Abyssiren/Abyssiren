@@ -50,6 +50,8 @@ public class GameController : MonoBehaviour {
                     {
                         Debug.Log("yeah found the child");
                         FishEnemyController cont = instantiatedEnemy.transform.FindChild("fishhead").GetComponent<FishEnemyController>();
+                        cont.AI = (FishEnemyController.FishAI)Random.Range(0, 4);
+                        cont.aiDistance = Random.Range(0, 7);
                         cont.distance = distance;
                         cont.attackTimer = Random.value * 400 + 200;
                         cont.entryDelay = Random.Range(0, 8);
