@@ -98,7 +98,7 @@ public class FishHealth : MonoBehaviour {
         ColorEnum bulletColor = bullet.GetComponent<Bullet>().color;
         if (bulletColor == healthColor)
         {
-            currHealth -= bullet.GetComponent<Bullet>().power * 2;
+            currHealth -= bullet.GetComponent<Bullet>().power * 3;
         }
         //then, tell the bullet to die
         currHealth -= bullet.GetComponent<Bullet>().power;
